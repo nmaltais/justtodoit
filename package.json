@@ -1,0 +1,21 @@
+{
+  "name": "justtodoit",
+  "version": "1.0.0",
+  "description": "Just To Do It is the best way to feel productive while procrastinating!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "Nicolas Maltais-D.",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2",
+    "mongodb": "^2.2.25"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
