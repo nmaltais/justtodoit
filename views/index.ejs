@@ -2,35 +2,29 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>MY APP</title>
+        <title>Just To-Do It!</title>
     </head>
     <body>
-        May Node and Express be with you.
+        Why do something when you can just To-Do it?
 
-        <ul class="quotes">
-            <% for(var i=0; i<quotes.length; i++) {%>
-            <li class="quote">
-                <span>"<%= quotes[i].quote %>"</span>
-                <span> --<%= quotes[i].name %></span>
-            </li>
-            <% } %>
+        <ul class="items">
+            <%for(var i=0; i<items.length; i++) {
+                if(items[i].cookie === currentCookie){%>
+                    <li class="item">
+                        <span><%= items[i].item %></span>
+                    </li>
+            <%
+                }
+            } %>
         </ul>
 
-        <form action="/quotes" method="POST">
-            <input type="text" placeholder="name" name="name">
-            <input type="text" placeholder="quote" name="quote">
+        <form action="/addItem" method="POST">
+            <input id="cookieField" hidden="true" type="text" name="cookie" value="">
+            <input id="_deleted" hidden="true" type="text" name="deleted" value="false">
+            <input type="text" placeholder="[Enter To-Do]" name="item">
             <button type="submit">Submit</button>
         </form>
 
-        <div>
-            <h2>Replace last quote written by Master Yoda with a quote written by Darth Vader</h2>
-            <button id="updateBtn"> Darth Vader invades! </button>
-        </div>
-
-        <div>
-            <h2>Delete Darth Vader's first quote</h2>
-            <button id="deleteBtn"> Delete first Darth Vader quote </button>
-        </div>
         <script src="main.js"></script>
     </body>
 </html>
