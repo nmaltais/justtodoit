@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const config = require('./config.json');
+
 MongoClient.connect(config.mongodb.connectionUrl, (err, database)=>{
     if (err) return console.log(err);
     db = database;
@@ -20,46 +21,23 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    //res.sendFile(__dirname + '/index.html');
-    db.collection('quotes').find().toArray((err, results)=>{
+    //Get cookie is existant
+    var currentCookie = ""
+    if(req.headers.cookie)
+        currentCookie = req.headers.cookie.substring(7);
+
+    //Get all items from DB and send-to/render index.ejs
+    db.collection('to-do-items').find().toArray((err, results)=>{
         if (err) return console.log(err);
-        res.render('index.ejs', {quotes: results})
+        res.render('index.ejs', {items: results, currentCookie: currentCookie})
     });
-    // Note: __dirname is directory that contains the JavaScript source code.
-    //console.log(__dirname);
 });
 
-app.post('/quotes', (req, res)=>{
-    db.collection('quotes').save(req.body, (err, result)=>{
+app.post('/addItem', (req, res)=>{
+    console.log("Adding" + req.body);
+    db.collection('to-do-items').save(req.body, (err, result)=>{
         if (err) return console.log(err);
         console.log('Saved to DB');
         res.redirect('/');
     })
 });
-
-app.put('/quotes', (req, res) => {
-    db.collection('quotes').findOneAndUpdate(
-        {name: 'Yoda'}, {
-            $set: {
-                name: req.body.name,
-                quote: req.body.quote
-            }
-        }, {
-            sort: {_id: -1},
-            upsert: true
-        }, (err, result) => {
-            if (err) return res.send(err)
-            res.send(result)
-        }
-    )
-})
-
-app.delete('/quotes', (req, res) => {
-    db.collection('quotes').findOneAndDelete(
-        {name: req.body.name},
-        (err, result) => {
-            if (err) return res.send(500, err)
-            res.send(result)
-        }
-    )
-})
