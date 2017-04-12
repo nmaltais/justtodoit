@@ -13,7 +13,7 @@ hr {
     margin-left: -20px;
     padding: 0;
 }
-.items, .items_deleted {
+.items, .items_done {
     list-style: none;
     position: relative;
     float: center;
@@ -23,9 +23,9 @@ hr {
 .items{
     background-color: #ddd;
 }
-.items_deleted{
+.items_done{
     background-color: #ddd;
 }
-.item, .item_deleted{
+.item, .item_done{
     display:block;
 }

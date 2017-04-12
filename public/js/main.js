@@ -76,7 +76,24 @@ function selected(item){
         if (res.ok) return res.json()
     })
     .then(data => {
-        console.log(data)
+        console.log("Crossed-off " + item);
+        window.location.reload(true)
+    });
+}
+function deleteItem(item){
+    fetch('deleteItem', {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            'cookie': getCookie('cookie'),
+            'item': item
+        })
+    })
+    .then(res => {
+        if (res.ok) return res.json()
+    })
+    .then(data => {
+        console.log("Deleted " + item);
         window.location.reload(true)
     });
 }
