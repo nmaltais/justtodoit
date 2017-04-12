@@ -3,28 +3,47 @@
     <head>
         <meta charset="UTF-8">
         <title>Just To-Do It!</title>
+        <link href="/css/style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        Why do something when you can just To-Do it?
-
-        <ul class="items">
-            <%for(var i=0; i<items.length; i++) {
-                if(items[i].cookie === currentCookie){%>
+        <h1>Why do something when you can just To-Do it?</h1>
+        <div id="container">
+            <ul class="items">
+                <hr><h3>To-Do:</h3>
+                <%if(items.length == 0){%>
+                    <p style="color:#555">Your list is empty.</p>
+                <%}%>
+                <%for(var i=0; i<items.length; i++) {%>
                     <li class="item">
+                        <input onchange="selected('<%= items[i].item %>')" type="checkbox">
                         <span><%= items[i].item %></span>
+                        <hr>
                     </li>
-            <%
-                }
-            } %>
-        </ul>
+                <%}%>
+                <form action="/addItem" method="POST">
+                    <input id="cookieField" hidden="true" type="text" name="cookie" value="">
+                    <input id="_deleted" hidden="true" type="text" name="deleted" value="false">
+                    <input type="text" placeholder="[Enter To-Do]" name="item">
+                        <button type="submit">To do!</button>
+                </form>
+                <hr>
+            </ul>
 
-        <form action="/addItem" method="POST">
-            <input id="cookieField" hidden="true" type="text" name="cookie" value="">
-            <input id="_deleted" hidden="true" type="text" name="deleted" value="false">
-            <input type="text" placeholder="[Enter To-Do]" name="item">
-            <button type="submit">Submit</button>
-        </form>
 
-        <script src="main.js"></script>
+
+            <ul class="items_deleted">
+                <hr><h3>Done:</h3>
+                <%if(items_deleted.length == 0){%>
+                    <p style="color:#555">Nothing done yet.</p>
+                <%}%>
+                <%for(var i=0; i<items_deleted.length; i++) {%>
+                    <li class="item_deleted">
+                        <span style='text-decoration: line-through'><%= items_deleted[i].item %></span>
+                        <hr>
+                    </li>
+                <%}%>
+            </ul>
+        </div>
+        <script src="js/main.js"></script>
     </body>
 </html>

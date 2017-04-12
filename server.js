@@ -29,7 +29,17 @@ app.get('/', (req, res) => {
     //Get all items from DB and send-to/render index.ejs
     db.collection('to-do-items').find().toArray((err, results)=>{
         if (err) return console.log(err);
-        res.render('index.ejs', {items: results, currentCookie: currentCookie})
+        var items_deleted = [], items = [];
+        results.forEach((item, index, arr)=>{
+            if(item.cookie == currentCookie){
+                if(item.deleted == "false")
+                    items.push(item);
+                else if(item.deleted == "true")
+                    items_deleted.push(item);
+            }
+        });
+
+        res.render('index.ejs', {items: items, items_deleted: items_deleted})
     });
 });
 
@@ -41,3 +51,45 @@ app.post('/addItem', (req, res)=>{
         res.redirect('/');
     })
 });
+
+app.put('/crossOffItem', (req, res) => {
+    console.log(req.body);
+    db.collection('to-do-items').findOneAndUpdate(
+        {item: req.body.item,
+        cookie: req.body.cookie}, {
+            $set: {
+                deleted: 'true'
+            }
+        }, (err, result) => {
+            if (err) return res.send(err)
+            res.send(result)
+        }
+    )
+})
+
+app.put('/quotes', (req, res) => {
+    db.collection('quotes').findOneAndUpdate(
+        {name: 'Yoda'}, {
+            $set: {
+                name: req.body.name,
+                quote: req.body.quote
+            }
+        }, {
+            sort: {_id: -1},
+            upsert: true
+        }, (err, result) => {
+            if (err) return res.send(err)
+            res.send(result)
+        }
+    )
+})
+
+app.delete('/quotes', (req, res) => {
+    db.collection('quotes').findOneAndDelete(
+        {name: req.body.name},
+        (err, result) => {
+            if (err) return res.send(500, err)
+            res.send(result)
+        }
+    )
+})
