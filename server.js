@@ -29,7 +29,17 @@ app.get('/', (req, res) => {
     //Get all items from DB and send-to/render index.ejs
     db.collection('to-do-items').find().toArray((err, results)=>{
         if (err) return console.log(err);
-        res.render('index.ejs', {items: results, currentCookie: currentCookie})
+        var items_done = [], items = [];
+        results.forEach((item, index, arr)=>{
+            if(item.cookie == currentCookie && item.deleted == "false"){
+                if(item.done == "false")
+                    items.push(item);
+                else if(item.done == "true")
+                    items_done.push(item);
+            }
+        });
+
+        res.render('index.ejs', {items: items, items_done: items_done})
     });
 });
 
@@ -41,3 +51,60 @@ app.post('/addItem', (req, res)=>{
         res.redirect('/');
     })
 });
+
+app.put('/crossOffItem', (req, res) => {
+    console.log("Cross-off" + req.body);
+    db.collection('to-do-items').findOneAndUpdate(
+        {item: req.body.item,
+        cookie: req.body.cookie}, {
+            $set: {
+                done: 'true'
+            }
+        }, (err, result) => {
+            if (err) return res.send(err)
+            res.send(result)
+        }
+    )
+});
+
+app.put('/deleteItem', (req, res) => {
+    console.log("Deleted: " + req.body);
+    db.collection('to-do-items').findOneAndUpdate(
+        {item: req.body.item,
+        cookie: req.body.cookie}, {
+            $set: {
+                deleted: 'true'
+            }
+        }, (err, result) => {
+            if (err) return res.send(err)
+            res.send(result)
+        }
+    )
+})
+
+// app.put('/quotes', (req, res) => {
+//     db.collection('quotes').findOneAndUpdate(
+//         {name: 'Yoda'}, {
+//             $set: {
+//                 name: req.body.name,
+//                 quote: req.body.quote
+//             }
+//         }, {
+//             sort: {_id: -1},
+//             upsert: true
+//         }, (err, result) => {
+//             if (err) return res.send(err)
+//             res.send(result)
+//         }
+//     )
+// })
+//
+// app.delete('/quotes', (req, res) => {
+//     db.collection('quotes').findOneAndDelete(
+//         {name: req.body.name},
+//         (err, result) => {
+//             if (err) return res.send(500, err)
+//             res.send(result)
+//         }
+//     )
+// })

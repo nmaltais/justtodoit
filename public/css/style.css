@@ -1,0 +1,31 @@
+body{
+    background-color: #ccc;
+}
+h1{
+    text-align: center;
+    color: #777;
+}
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    //border-top: 1px solid #777;
+    margin-left: -20px;
+    padding: 0;
+}
+.items, .items_done {
+    list-style: none;
+    position: relative;
+    float: center;
+    //margin-left: -40px;
+}
+
+.items{
+    background-color: #ddd;
+}
+.items_done{
+    background-color: #ddd;
+}
+.item, .item_done{
+    display:block;
+}
